@@ -87,7 +87,7 @@ const Auth: React.FC = () => {
     <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
       {/* Logo & Title */}
       <div className="mb-8 flex flex-col items-center">
-        <img src={logo} alt="MATLYNX" className="mb-4 h-20 w-20" />
+        <img src={logo} alt="MATLYNX" className="mb-4 h-20 w-20 rounded-xl" />
         <h1 className="text-3xl font-bold text-foreground">MATLYNX</h1>
         <p className="mt-1 text-center text-muted-foreground">
           Construction Materials Marketplace
@@ -148,6 +148,27 @@ const Auth: React.FC = () => {
             <CardContent>
               <form onSubmit={handleRegister} className="space-y-4">
                 <div>
+                  <Label>I am a...</Label>
+                  <RadioGroup
+                    value={regRole}
+                    onValueChange={(value) => setRegRole(value as UserRole)}
+                    className="mt-2 flex gap-6"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="dealer" id="role-dealer" />
+                      <Label htmlFor="role-dealer" className="cursor-pointer font-normal">
+                        Dealer (I sell materials)
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="contractor" id="role-contractor" />
+                      <Label htmlFor="role-contractor" className="cursor-pointer font-normal">
+                        Contractor (I buy materials)
+                      </Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+                <div>
                   <Label htmlFor="reg-name">Full Name</Label>
                   <Input
                     id="reg-name"
@@ -185,27 +206,6 @@ const Auth: React.FC = () => {
                     onChange={(e) => setRegPassword(e.target.value)}
                     placeholder="Min 6 characters"
                   />
-                </div>
-                <div>
-                  <Label>I am a...</Label>
-                  <RadioGroup
-                    value={regRole}
-                    onValueChange={(value) => setRegRole(value as UserRole)}
-                    className="mt-2 flex gap-6"
-                  >
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="dealer" id="role-dealer" />
-                      <Label htmlFor="role-dealer" className="cursor-pointer font-normal">
-                        Dealer (I sell materials)
-                      </Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="contractor" id="role-contractor" />
-                      <Label htmlFor="role-contractor" className="cursor-pointer font-normal">
-                        Contractor (I buy materials)
-                      </Label>
-                    </div>
-                  </RadioGroup>
                 </div>
                 {regError && (
                   <p className="text-sm text-destructive">{regError}</p>
