@@ -20,7 +20,7 @@ const Header: React.FC = () => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center gap-3">
-            <img src={logo} alt="MATLYNX" className="h-10 w-10 object-contain" />
+            <img src={logo} alt="MATLYNX" className="h-10 w-10 rounded-lg object-contain" />
             <span className="text-xl font-bold text-primary-foreground">MATLYNX</span>
           </div>
 
