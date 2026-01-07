@@ -15,7 +15,7 @@ import { X, ImagePlus } from 'lucide-react';
 
 interface MaterialFormProps {
   material?: Material | null;
-  onSubmit: (data: Omit<Material, 'id' | 'dealerEmail' | 'dealerName' | 'dealerPhone' | 'createdAt' | 'updatedAt'>) => void;
+  onSubmit: (data: Omit<Material, 'id' | 'dealerEmail' | 'dealerName' | 'dealerPhone' | 'createdAt' | 'updatedAt' | 'priceUpdatedAt'>) => void;
   onCancel: () => void;
 }
 
@@ -35,6 +35,7 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, onCance
   const [unit, setUnit] = useState<MaterialUnit>('bags');
   const [description, setDescription] = useState('');
   const [imageUrl, setImageUrl] = useState('');
+  const [priceValidUntil, setPriceValidUntil] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Populate form if editing
@@ -46,6 +47,7 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, onCance
       setUnit(material.unit);
       setDescription(material.description);
       setImageUrl(material.imageUrl || '');
+      setPriceValidUntil(material.priceValidUntil || '');
     }
   }, [material]);
 
@@ -93,6 +95,7 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, onCance
       description: description.trim(),
       imageUrl: imageUrl || undefined,
       isActive: material?.isActive ?? true,
+      priceValidUntil: priceValidUntil || undefined,
     });
   };
 
@@ -151,6 +154,21 @@ const MaterialForm: React.FC<MaterialFormProps> = ({ material, onSubmit, onCance
               />
               {errors.quantity && <p className="mt-1 text-sm text-destructive">{errors.quantity}</p>}
             </div>
+          </div>
+
+          {/* Price Valid Until */}
+          <div>
+            <Label htmlFor="priceValidUntil">Price Valid Until (optional)</Label>
+            <Input
+              id="priceValidUntil"
+              type="date"
+              value={priceValidUntil}
+              onChange={(e) => setPriceValidUntil(e.target.value)}
+              min={new Date().toISOString().split('T')[0]}
+            />
+            <p className="mt-1 text-xs text-muted-foreground">
+              Leave empty if price has no expiry
+            </p>
           </div>
 
           {/* Unit */}

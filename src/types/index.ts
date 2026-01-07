@@ -27,6 +27,8 @@ export interface Material {
   description: string;
   imageUrl?: string; // Base64 or data URL for local storage
   isActive: boolean;
+  priceUpdatedAt: string; // When price was last updated
+  priceValidUntil?: string; // Optional: price validity end date
   createdAt: string;
   updatedAt: string;
 }

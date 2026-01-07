@@ -3,7 +3,8 @@ import { Material, MaterialUnit } from '@/types';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Phone, MessageCircle, Mail, Edit, Trash2, Pause, Play, Package } from 'lucide-react';
+import { Phone, MessageCircle, Mail, Edit, Trash2, Pause, Play, Package, Clock } from 'lucide-react';
+import { formatDistanceToNow, format, isPast, parseISO } from 'date-fns';
 
 // Format unit for display
 const formatUnit = (unit: MaterialUnit): string => {
@@ -42,8 +43,25 @@ const MaterialCard: React.FC<MaterialCardProps> = ({
     imageUrl, 
     isActive,
     dealerName,
-    dealerPhone 
+    dealerPhone,
+    priceUpdatedAt,
+    priceValidUntil
   } = material;
+
+  // Check if price is expired
+  const isPriceExpired = priceValidUntil ? isPast(parseISO(priceValidUntil)) : false;
+
+  // Format price update time
+  const priceUpdateText = priceUpdatedAt 
+    ? `Updated ${formatDistanceToNow(parseISO(priceUpdatedAt), { addSuffix: true })}`
+    : null;
+
+  // Format validity
+  const validityText = priceValidUntil 
+    ? isPriceExpired 
+      ? 'Price expired'
+      : `Valid until ${format(parseISO(priceValidUntil), 'dd MMM yyyy')}`
+    : null;
 
   // WhatsApp message
   const whatsappMessage = encodeURIComponent(
@@ -83,6 +101,22 @@ const MaterialCard: React.FC<MaterialCardProps> = ({
         <p className="text-sm text-muted-foreground">
           {quantity} {formatUnit(unit)} available
         </p>
+        {/* Price timing info */}
+        {(priceUpdateText || validityText) && (
+          <div className="mt-2 flex flex-wrap items-center gap-2 text-xs">
+            {priceUpdateText && (
+              <span className="flex items-center gap-1 text-muted-foreground">
+                <Clock className="h-3 w-3" />
+                {priceUpdateText}
+              </span>
+            )}
+            {validityText && (
+              <Badge variant={isPriceExpired ? 'destructive' : 'secondary'} className="text-xs">
+                {validityText}
+              </Badge>
+            )}
+          </div>
+        )}
       </CardHeader>
 
       <CardContent className="pb-3">

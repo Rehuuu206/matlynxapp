@@ -35,17 +35,19 @@ const DealerDashboard: React.FC = () => {
     }
   };
 
-  const handleAddMaterial = (data: Omit<Material, 'id' | 'dealerEmail' | 'dealerName' | 'dealerPhone' | 'createdAt' | 'updatedAt'>) => {
+  const handleAddMaterial = (data: Omit<Material, 'id' | 'dealerEmail' | 'dealerName' | 'dealerPhone' | 'createdAt' | 'updatedAt' | 'priceUpdatedAt'>) => {
     if (!user) return;
 
+    const now = new Date().toISOString();
     const newMaterial: Material = {
       ...data,
       id: generateId(),
       dealerEmail: user.email,
       dealerName: user.name,
       dealerPhone: user.phone,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      priceUpdatedAt: now,
+      createdAt: now,
+      updatedAt: now,
     };
 
     addMaterial(newMaterial);
@@ -53,10 +55,15 @@ const DealerDashboard: React.FC = () => {
     setShowForm(false);
   };
 
-  const handleEditMaterial = (data: Omit<Material, 'id' | 'dealerEmail' | 'dealerName' | 'dealerPhone' | 'createdAt' | 'updatedAt'>) => {
+  const handleEditMaterial = (data: Omit<Material, 'id' | 'dealerEmail' | 'dealerName' | 'dealerPhone' | 'createdAt' | 'updatedAt' | 'priceUpdatedAt'>) => {
     if (!editingMaterial) return;
 
-    updateMaterial(editingMaterial.id, data);
+    // Check if price changed to update priceUpdatedAt
+    const priceChanged = editingMaterial.price !== data.price;
+    updateMaterial(editingMaterial.id, {
+      ...data,
+      ...(priceChanged && { priceUpdatedAt: new Date().toISOString() }),
+    });
     loadMaterials();
     setEditingMaterial(null);
     setShowForm(false);
