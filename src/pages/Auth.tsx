@@ -31,6 +31,8 @@ const Auth: React.FC = () => {
   const [regEmail, setRegEmail] = useState('');
   const [regPhone, setRegPhone] = useState('');
   const [regWhatsapp, setRegWhatsapp] = useState('');
+  const [regArea, setRegArea] = useState('');
+  const [regAvailability, setRegAvailability] = useState('');
   const [regPassword, setRegPassword] = useState('');
   const [regRole, setRegRole] = useState<UserRole>('dealer');
   const [regError, setRegError] = useState('');
@@ -73,7 +75,9 @@ const Auth: React.FC = () => {
       name: regName.trim(),
       email: regEmail.trim().toLowerCase(),
       phone: regPhone.trim(),
-      whatsapp: regWhatsapp.trim() || regPhone.trim(), // Use phone if whatsapp not provided
+      whatsapp: regWhatsapp.trim() || regPhone.trim(),
+      area: regArea.trim() || undefined,
+      availability: regAvailability.trim() || undefined,
       password: regPassword,
       role: regRole,
       createdAt: new Date().toISOString(),
@@ -201,19 +205,36 @@ const Auth: React.FC = () => {
                   />
                 </div>
                 {regRole === 'dealer' && (
-                  <div>
-                    <Label htmlFor="reg-whatsapp">WhatsApp Number (optional)</Label>
-                    <Input
-                      id="reg-whatsapp"
-                      type="tel"
-                      value={regWhatsapp}
-                      onChange={(e) => setRegWhatsapp(e.target.value)}
-                      placeholder="Same as phone if empty"
-                    />
-                    <p className="mt-1 text-xs text-muted-foreground">
-                      Leave empty to use phone number for WhatsApp
-                    </p>
-                  </div>
+                  <>
+                    <div>
+                      <Label htmlFor="reg-whatsapp">WhatsApp Number (optional)</Label>
+                      <Input
+                        id="reg-whatsapp"
+                        type="tel"
+                        value={regWhatsapp}
+                        onChange={(e) => setRegWhatsapp(e.target.value)}
+                        placeholder="Same as phone if empty"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="reg-area">Service Area</Label>
+                      <Input
+                        id="reg-area"
+                        value={regArea}
+                        onChange={(e) => setRegArea(e.target.value)}
+                        placeholder="e.g. Mumbai, Thane, Navi Mumbai"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="reg-availability">Availability Hours</Label>
+                      <Input
+                        id="reg-availability"
+                        value={regAvailability}
+                        onChange={(e) => setRegAvailability(e.target.value)}
+                        placeholder="e.g. Mon-Sat 9AM-6PM"
+                      />
+                    </div>
+                  </>
                 )}
                 <div>
                   <Label htmlFor="reg-password">Password</Label>
