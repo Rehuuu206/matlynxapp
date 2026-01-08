@@ -30,8 +30,9 @@ const Auth: React.FC = () => {
   const [regName, setRegName] = useState('');
   const [regEmail, setRegEmail] = useState('');
   const [regPhone, setRegPhone] = useState('');
+  const [regWhatsapp, setRegWhatsapp] = useState('');
   const [regPassword, setRegPassword] = useState('');
-  const [regRole, setRegRole] = useState<UserRole>('contractor');
+  const [regRole, setRegRole] = useState<UserRole>('dealer');
   const [regError, setRegError] = useState('');
 
   const handleLogin = (e: React.FormEvent) => {
@@ -72,6 +73,7 @@ const Auth: React.FC = () => {
       name: regName.trim(),
       email: regEmail.trim().toLowerCase(),
       phone: regPhone.trim(),
+      whatsapp: regWhatsapp.trim() || regPhone.trim(), // Use phone if whatsapp not provided
       password: regPassword,
       role: regRole,
       createdAt: new Date().toISOString(),
@@ -188,15 +190,31 @@ const Auth: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="reg-phone">Phone Number</Label>
+                  <Label htmlFor="reg-phone">Phone Number *</Label>
                   <Input
                     id="reg-phone"
                     type="tel"
                     value={regPhone}
                     onChange={(e) => setRegPhone(e.target.value)}
                     placeholder="+91 9876543210"
+                    required
                   />
                 </div>
+                {regRole === 'dealer' && (
+                  <div>
+                    <Label htmlFor="reg-whatsapp">WhatsApp Number (optional)</Label>
+                    <Input
+                      id="reg-whatsapp"
+                      type="tel"
+                      value={regWhatsapp}
+                      onChange={(e) => setRegWhatsapp(e.target.value)}
+                      placeholder="Same as phone if empty"
+                    />
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      Leave empty to use phone number for WhatsApp
+                    </p>
+                  </div>
+                )}
                 <div>
                   <Label htmlFor="reg-password">Password</Label>
                   <Input
