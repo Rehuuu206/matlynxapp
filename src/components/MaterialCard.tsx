@@ -3,7 +3,7 @@ import { Material, MaterialUnit } from '@/types';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Phone, MessageCircle, Mail, Edit, Trash2, Pause, Play, Package, Clock } from 'lucide-react';
+import { Phone, MessageCircle, Mail, Edit, Trash2, Pause, Play, Package, Clock, MapPin, User, CheckCircle } from 'lucide-react';
 import { formatDistanceToNow, format, isPast, parseISO } from 'date-fns';
 
 // Format unit for display
@@ -45,6 +45,8 @@ const MaterialCard: React.FC<MaterialCardProps> = ({
     dealerName,
     dealerPhone,
     dealerWhatsapp,
+    dealerArea,
+    dealerAvailability,
     priceUpdatedAt,
     priceValidUntil
   } = material;
@@ -125,10 +127,38 @@ const MaterialCard: React.FC<MaterialCardProps> = ({
         {description && (
           <p className="line-clamp-2 text-sm text-muted-foreground">{description}</p>
         )}
+        
+        {/* Dealer Profile Section - Only for Contractor View */}
         {viewMode === 'contractor' && (
-          <p className="mt-2 text-sm font-medium text-foreground">
-            Dealer: {dealerName}
-          </p>
+          <div className="mt-3 rounded-lg border bg-muted/30 p-3">
+            <div className="mb-2 flex items-center gap-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
+                <User className="h-4 w-4 text-primary" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-foreground">{dealerName}</p>
+                <p className="text-xs text-muted-foreground">{dealerPhone}</p>
+              </div>
+            </div>
+            <div className="space-y-1.5 text-xs">
+              {dealerArea && (
+                <div className="flex items-center gap-1.5 text-muted-foreground">
+                  <MapPin className="h-3 w-3" />
+                  <span>{dealerArea}</span>
+                </div>
+              )}
+              {dealerAvailability && (
+                <div className="flex items-center gap-1.5 text-muted-foreground">
+                  <Clock className="h-3 w-3" />
+                  <span>{dealerAvailability}</span>
+                </div>
+              )}
+              <div className="flex items-center gap-1.5 text-green-600">
+                <CheckCircle className="h-3 w-3" />
+                <span>Verified Dealer</span>
+              </div>
+            </div>
+          </div>
         )}
       </CardContent>
 

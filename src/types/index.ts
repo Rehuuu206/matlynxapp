@@ -8,6 +8,8 @@ export interface User {
   password: string; // In real app, this would be hashed
   phone: string;
   whatsapp?: string; // Optional separate WhatsApp number
+  area?: string; // Dealer's service area
+  availability?: string; // Dealer's availability hours
   role: UserRole;
   createdAt: string;
 }
@@ -22,6 +24,8 @@ export interface Material {
   dealerName: string;
   dealerPhone: string;
   dealerWhatsapp?: string; // Optional separate WhatsApp number
+  dealerArea?: string; // Dealer's service area
+  dealerAvailability?: string; // Dealer's availability hours
   name: string;
   price: number;
   quantity: number;
