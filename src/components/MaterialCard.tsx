@@ -44,6 +44,7 @@ const MaterialCard: React.FC<MaterialCardProps> = ({
     isActive,
     dealerName,
     dealerPhone,
+    dealerWhatsapp,
     priceUpdatedAt,
     priceValidUntil
   } = material;
@@ -63,11 +64,12 @@ const MaterialCard: React.FC<MaterialCardProps> = ({
       : `Valid until ${format(parseISO(priceValidUntil), 'dd MMM yyyy')}`
     : null;
 
-  // WhatsApp message
+  // WhatsApp message - use dealerWhatsapp if available, otherwise use phone
+  const whatsappNumber = dealerWhatsapp || dealerPhone;
   const whatsappMessage = encodeURIComponent(
     `Hi, I'm interested in your material "${name}" listed on MATLYNX. Please share more details.`
   );
-  const whatsappUrl = `https://wa.me/${dealerPhone.replace(/\D/g, '')}?text=${whatsappMessage}`;
+  const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/\D/g, '')}?text=${whatsappMessage}`;
 
   return (
     <Card className={`animate-fade-in overflow-hidden transition-all hover:shadow-md ${!isActive && viewMode === 'dealer' ? 'opacity-60' : ''}`}>

@@ -45,6 +45,7 @@ const DealerDashboard: React.FC = () => {
       dealerEmail: user.email,
       dealerName: user.name,
       dealerPhone: user.phone,
+      dealerWhatsapp: user.whatsapp || user.phone,
       priceUpdatedAt: now,
       createdAt: now,
       updatedAt: now,
