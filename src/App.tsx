@@ -4,21 +4,38 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
+import { ProfileProvider, useProfile } from "@/contexts/ProfileContext";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import ProfileGuard from "@/components/ProfileGuard";
 import Auth from "@/pages/Auth";
+import ProfileSetup from "@/pages/ProfileSetup";
+import Settings from "@/pages/Settings";
 import DealerDashboard from "@/pages/DealerDashboard";
 import ContractorDashboard from "@/pages/ContractorDashboard";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
 
-// Home route that redirects based on auth status
+// Home route that redirects based on auth status and profile completion
 const HomeRedirect: React.FC = () => {
   const { isAuthenticated, user } = useAuth();
+  const { isProfileComplete, isLoading } = useProfile();
 
   if (!isAuthenticated || !user) {
     return <Navigate to="/auth" replace />;
+  }
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-pulse text-muted-foreground">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!isProfileComplete) {
+    return <Navigate to="/profile-setup" replace />;
   }
 
   return <Navigate to={user.role === 'dealer' ? '/dealer' : '/contractor'} replace />;
@@ -27,28 +44,45 @@ const HomeRedirect: React.FC = () => {
 const AppRoutes: React.FC = () => {
   return (
     <Routes>
-      {/* Home redirects based on auth/role */}
+      {/* Home redirects based on auth/role/profile */}
       <Route path="/" element={<HomeRedirect />} />
       
       {/* Auth page */}
       <Route path="/auth" element={<Auth />} />
       
-      {/* Dealer dashboard - protected */}
+      {/* Profile setup - requires auth but not complete profile */}
+      <Route path="/profile-setup" element={<ProfileSetup />} />
+      
+      {/* Settings - requires auth and complete profile */}
+      <Route
+        path="/settings"
+        element={
+          <ProfileGuard>
+            <Settings />
+          </ProfileGuard>
+        }
+      />
+      
+      {/* Dealer dashboard - protected + profile required */}
       <Route
         path="/dealer"
         element={
           <ProtectedRoute allowedRole="dealer">
-            <DealerDashboard />
+            <ProfileGuard>
+              <DealerDashboard />
+            </ProfileGuard>
           </ProtectedRoute>
         }
       />
       
-      {/* Contractor dashboard - protected */}
+      {/* Contractor dashboard - protected + profile required */}
       <Route
         path="/contractor"
         element={
           <ProtectedRoute allowedRole="contractor">
-            <ContractorDashboard />
+            <ProfileGuard>
+              <ContractorDashboard />
+            </ProfileGuard>
           </ProtectedRoute>
         }
       />
@@ -67,7 +101,9 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <AuthProvider>
-            <AppRoutes />
+            <ProfileProvider>
+              <AppRoutes />
+            </ProfileProvider>
           </AuthProvider>
         </BrowserRouter>
       </TooltipProvider>
