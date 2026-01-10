@@ -1,9 +1,11 @@
 import React from 'react';
 import { Material, MaterialUnit } from '@/types';
+import { Profile } from '@/types/profile';
+import { getProfileByUserId } from '@/lib/profileStorage';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Phone, MessageCircle, Mail, Edit, Trash2, Pause, Play, Package, Clock, MapPin, User, CheckCircle } from 'lucide-react';
+import { Phone, MessageCircle, Mail, Edit, Trash2, Pause, Play, Package, Clock, MapPin, User, CheckCircle, Building2 } from 'lucide-react';
 import { formatDistanceToNow, format, isPast, parseISO } from 'date-fns';
 
 // Format unit for display
@@ -42,14 +44,25 @@ const MaterialCard: React.FC<MaterialCardProps> = ({
     description, 
     imageUrl, 
     isActive,
-    dealerName,
-    dealerPhone,
-    dealerWhatsapp,
-    dealerArea,
-    dealerAvailability,
+    dealerEmail,
     priceUpdatedAt,
     priceValidUntil
   } = material;
+
+  // Get dealer profile for enhanced display
+  const dealerProfile: Profile | null = React.useMemo(() => {
+    return getProfileByUserId(dealerEmail);
+  }, [dealerEmail]);
+
+  // Use profile data if available, fallback to material data
+  const displayName = dealerProfile?.fullName || material.dealerName;
+  const displayShopName = dealerProfile?.shopName;
+  const displayPhone = dealerProfile?.phone || material.dealerPhone;
+  const displayWhatsapp = dealerProfile?.whatsapp || material.dealerWhatsapp || displayPhone;
+  const displayArea = dealerProfile?.address 
+    ? `${dealerProfile.address.area}, ${dealerProfile.address.city}` 
+    : material.dealerArea;
+  const displayPhoto = dealerProfile?.profilePhoto;
 
   // Check if price is expired
   const isPriceExpired = priceValidUntil ? isPast(parseISO(priceValidUntil)) : false;
@@ -66,12 +79,11 @@ const MaterialCard: React.FC<MaterialCardProps> = ({
       : `Valid until ${format(parseISO(priceValidUntil), 'dd MMM yyyy')}`
     : null;
 
-  // WhatsApp message - use dealerWhatsapp if available, otherwise use phone
-  const whatsappNumber = dealerWhatsapp || dealerPhone;
+  // WhatsApp message
   const whatsappMessage = encodeURIComponent(
     `Hi, I'm interested in your material "${name}" listed on MATLYNX. Please share more details.`
   );
-  const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/\D/g, '')}?text=${whatsappMessage}`;
+  const whatsappUrl = `https://wa.me/${displayWhatsapp.replace(/\D/g, '')}?text=${whatsappMessage}`;
 
   return (
     <Card className={`animate-fade-in overflow-hidden transition-all hover:shadow-md ${!isActive && viewMode === 'dealer' ? 'opacity-60' : ''}`}>
@@ -131,26 +143,36 @@ const MaterialCard: React.FC<MaterialCardProps> = ({
         {/* Dealer Profile Section - Only for Contractor View */}
         {viewMode === 'contractor' && (
           <div className="mt-3 rounded-lg border bg-muted/30 p-3">
+            {/* Dealer header with photo */}
             <div className="mb-2 flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
-                <User className="h-4 w-4 text-primary" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 overflow-hidden">
+                {displayPhoto ? (
+                  <img src={displayPhoto} alt={displayName} className="h-full w-full object-cover" />
+                ) : (
+                  <User className="h-5 w-5 text-primary" />
+                )}
               </div>
-              <div>
-                <p className="text-sm font-semibold text-foreground">{dealerName}</p>
-                <p className="text-xs text-muted-foreground">{dealerPhone}</p>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-foreground truncate">{displayName}</p>
+                {displayShopName && (
+                  <p className="text-xs text-muted-foreground flex items-center gap-1 truncate">
+                    <Building2 className="h-3 w-3 flex-shrink-0" />
+                    {displayShopName}
+                  </p>
+                )}
               </div>
             </div>
+            
+            {/* Dealer details */}
             <div className="space-y-1.5 text-xs">
-              {dealerArea && (
+              <div className="flex items-center gap-1.5 text-muted-foreground">
+                <Phone className="h-3 w-3" />
+                <span>{displayPhone}</span>
+              </div>
+              {displayArea && (
                 <div className="flex items-center gap-1.5 text-muted-foreground">
                   <MapPin className="h-3 w-3" />
-                  <span>{dealerArea}</span>
-                </div>
-              )}
-              {dealerAvailability && (
-                <div className="flex items-center gap-1.5 text-muted-foreground">
-                  <Clock className="h-3 w-3" />
-                  <span>{dealerAvailability}</span>
+                  <span>{displayArea}</span>
                 </div>
               )}
               <div className="flex items-center gap-1.5 text-green-600">
@@ -167,7 +189,7 @@ const MaterialCard: React.FC<MaterialCardProps> = ({
           // Contractor actions: contact dealer
           <>
             <Button size="sm" variant="outline" asChild className="flex-1">
-              <a href={`tel:${dealerPhone}`}>
+              <a href={`tel:${displayPhone}`}>
                 <Phone className="mr-1 h-4 w-4" />
                 Call
               </a>
@@ -179,7 +201,7 @@ const MaterialCard: React.FC<MaterialCardProps> = ({
               </a>
             </Button>
             <Button size="sm" variant="outline" asChild className="flex-1">
-              <a href={`mailto:${material.dealerEmail}?subject=Inquiry: ${name}`}>
+              <a href={`mailto:${dealerEmail}?subject=Inquiry: ${name}`}>
                 <Mail className="mr-1 h-4 w-4" />
                 Email
               </a>

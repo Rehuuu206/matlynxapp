@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useProfile } from '@/contexts/ProfileContext';
 import { Material } from '@/types';
 import {
   getMaterialsByDealer,
@@ -17,6 +18,7 @@ import { Plus, Package } from 'lucide-react';
 
 const DealerDashboard: React.FC = () => {
   const { user } = useAuth();
+  const { profile } = useProfile();
   const [materials, setMaterials] = useState<Material[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [editingMaterial, setEditingMaterial] = useState<Material | null>(null);
@@ -39,14 +41,19 @@ const DealerDashboard: React.FC = () => {
     if (!user) return;
 
     const now = new Date().toISOString();
+    // Use profile data for dealer info
+    const dealerArea = profile?.address 
+      ? `${profile.address.area}, ${profile.address.city}` 
+      : user.area;
+    
     const newMaterial: Material = {
       ...data,
       id: generateId(),
       dealerEmail: user.email,
-      dealerName: user.name,
-      dealerPhone: user.phone,
-      dealerWhatsapp: user.whatsapp || user.phone,
-      dealerArea: user.area,
+      dealerName: profile?.fullName || user.name,
+      dealerPhone: profile?.phone || user.phone,
+      dealerWhatsapp: profile?.whatsapp || profile?.phone || user.whatsapp || user.phone,
+      dealerArea,
       dealerAvailability: user.availability,
       priceUpdatedAt: now,
       createdAt: now,
