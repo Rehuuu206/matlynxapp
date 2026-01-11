@@ -34,7 +34,8 @@ const HomeRedirect: React.FC = () => {
     );
   }
 
-  if (!isProfileComplete) {
+  // Contractors skip profile setup, dealers require it
+  if (user.role === 'dealer' && !isProfileComplete) {
     return <Navigate to="/profile-setup" replace />;
   }
 

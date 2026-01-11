@@ -12,7 +12,7 @@ interface ProfileGuardProps {
  * Redirects to /profile-setup if profile is incomplete
  */
 const ProfileGuard: React.FC<ProfileGuardProps> = ({ children }) => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const { isProfileComplete, isLoading } = useProfile();
 
   // Don't redirect while loading
@@ -29,7 +29,12 @@ const ProfileGuard: React.FC<ProfileGuardProps> = ({ children }) => {
     return <>{children}</>;
   }
 
-  // Profile incomplete - redirect to setup
+  // Contractors don't need profile setup - skip the check
+  if (user?.role === 'contractor') {
+    return <>{children}</>;
+  }
+
+  // Dealers: Profile incomplete - redirect to setup
   if (!isProfileComplete) {
     return <Navigate to="/profile-setup" replace />;
   }
