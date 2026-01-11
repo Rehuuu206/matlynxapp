@@ -63,10 +63,18 @@ const ProfileSetup: React.FC = () => {
     }
   }, [profile, user]);
 
-  // Redirect if profile is complete
+  // Redirect contractors away - they don't need profile setup
+  // Redirect dealers if profile is complete
   useEffect(() => {
-    if (isProfileComplete && user) {
-      navigate(user.role === 'dealer' ? '/dealer' : '/contractor', { replace: true });
+    if (!user) return;
+    
+    if (user.role === 'contractor') {
+      navigate('/contractor', { replace: true });
+      return;
+    }
+    
+    if (isProfileComplete) {
+      navigate('/dealer', { replace: true });
     }
   }, [isProfileComplete, user, navigate]);
 
