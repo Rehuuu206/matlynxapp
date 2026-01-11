@@ -46,7 +46,7 @@ const Auth: React.FC = () => {
       return;
     }
 
-    const result = login(loginEmail.trim(), loginPassword);
+    const result = login(loginEmail.trim().toLowerCase(), loginPassword);
     if (!result.success) {
       setLoginError(result.error || 'Login failed');
     }
