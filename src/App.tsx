@@ -14,11 +14,12 @@ import Settings from "@/pages/Settings";
 import DealerDashboard from "@/pages/DealerDashboard";
 import ContractorDashboard from "@/pages/ContractorDashboard";
 import NotFound from "@/pages/NotFound";
+import LandingPage from "@/pages/LandingPage";
 
 const queryClient = new QueryClient();
 
-// Home route that redirects based on auth status and profile completion
-const HomeRedirect: React.FC = () => {
+// Dashboard redirect for authenticated users
+const DashboardRedirect: React.FC = () => {
   const { isAuthenticated, user } = useAuth();
   const { isProfileComplete, isLoading } = useProfile();
 
@@ -45,8 +46,11 @@ const HomeRedirect: React.FC = () => {
 const AppRoutes: React.FC = () => {
   return (
     <Routes>
-      {/* Home redirects based on auth/role/profile */}
-      <Route path="/" element={<HomeRedirect />} />
+      {/* Public landing page */}
+      <Route path="/" element={<LandingPage />} />
+      
+      {/* Dashboard redirect for authenticated users */}
+      <Route path="/dashboard" element={<DashboardRedirect />} />
       
       {/* Auth page */}
       <Route path="/auth" element={<Auth />} />
