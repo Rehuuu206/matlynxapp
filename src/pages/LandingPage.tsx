@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { 
   Package, 
   Users, 
@@ -80,9 +81,12 @@ const LandingPage: React.FC = () => {
             <img src={logo} alt="MATLYNX" className="h-10 w-10" />
             <span className="text-2xl font-bold text-primary">MATLYNX</span>
           </div>
-          <Link to="/auth">
-            <Button>Get Started</Button>
-          </Link>
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
+            <Link to="/auth">
+              <Button>Get Started</Button>
+            </Link>
+          </div>
         </div>
       </header>
 
