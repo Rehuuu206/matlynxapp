@@ -41,9 +41,9 @@ const Header: React.FC = () => {
             <ThemeToggle />
             {user && (
               <div className="flex items-center gap-3">
-                {/* User info */}
+                {/* User info - show profile for dealers only */}
                 <div className="hidden sm:flex items-center gap-2 text-primary-foreground/80">
-                  {profile?.profilePhoto ? (
+                  {user.role === 'dealer' && profile?.profilePhoto ? (
                     <img 
                       src={profile.profilePhoto} 
                       alt="Profile" 
@@ -52,14 +52,16 @@ const Header: React.FC = () => {
                   ) : (
                     <User className="h-4 w-4" />
                   )}
-                  <span className="text-sm font-medium">{displayName}</span>
+                  <span className="text-sm font-medium">
+                    {user.role === 'dealer' ? displayName : user.name}
+                  </span>
                   <span className="rounded bg-primary/20 px-2 py-0.5 text-xs capitalize text-primary-foreground">
                     {user.role}
                   </span>
                 </div>
 
-                {/* Settings button */}
-                {!isSettingsPage && (
+                {/* Settings button - Only for dealers */}
+                {!isSettingsPage && user?.role === 'dealer' && (
                   <Button
                     variant="ghost"
                     size="icon"

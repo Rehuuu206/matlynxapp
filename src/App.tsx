@@ -58,13 +58,15 @@ const AppRoutes: React.FC = () => {
       {/* Profile setup - requires auth but not complete profile */}
       <Route path="/profile-setup" element={<ProfileSetup />} />
       
-      {/* Settings - requires auth and complete profile */}
+      {/* Settings - dealers only */}
       <Route
         path="/settings"
         element={
-          <ProfileGuard>
-            <Settings />
-          </ProfileGuard>
+          <ProtectedRoute allowedRole="dealer">
+            <ProfileGuard>
+              <Settings />
+            </ProfileGuard>
+          </ProtectedRoute>
         }
       />
       
