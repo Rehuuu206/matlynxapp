@@ -1,73 +1,65 @@
-# Welcome to your Lovable project
+🏗️ MATLYNX – Real-Time Construction Materials Marketplace
 
-## Project info
+MATLYNX is a B2B marketplace that connects construction material dealers with contractors in real time.
+Dealers can list materials (cement, steel, bricks, sand, etc.), and contractors can instantly view prices and contact dealers via WhatsApp.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+This project is currently built as an MVP (Minimum Viable Product) focused on speed, usability, and real-world validation.
 
-## How can I edit this code?
+🌐 Project Info
 
-There are several ways of editing your application.
+Project Name: MATLYNX
 
-**Use Lovable**
+Type: Web App (MVP)
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+Target Users:
 
-Changes made via Lovable will be committed automatically to this repo.
+🏢 Dealers (material suppliers)
 
-**Use your preferred IDE**
+🏗 Contractors (buyers)
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+Status: MVP – Live testing phase
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+🚀 Key Features (MVP)
+Dealer Side
 
-Follow these steps:
+Dealer login
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+Dealer profile (shop name, address, contact)
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+Post construction materials with price & quantity
 
-# Step 3: Install the necessary dependencies.
-npm i
+WhatsApp contact button (no chat system needed)
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+Contractor Side
 
-**Edit a file directly in GitHub**
+Browse available materials
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+View dealer details
 
-**Use GitHub Codespaces**
+Contact dealer directly on WhatsApp
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+No login friction for early users (optional)
 
-## What technologies are used for this project?
+Platform
 
-This project is built with:
+Mobile-first UI
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Fast load time
 
-## How can I deploy this project?
+Simple,
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+No heavy backend during MVP stage
 
-## Can I connect a custom domain to my Lovable project?
+🛠️ Tech Stack
 
-Yes, you can!
+This project is built using modern, fast, and scalable tools:
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+Vite – lightning-fast dev environment
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+React – UI framework
+
+TypeScript – type safety
+
+Tailwind CSS – utility-first styling
+
+shadcn/ui – modern UI components
